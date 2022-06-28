@@ -1,23 +1,66 @@
-CREATE DATABASE IF NOT EXISTS photoshare;
+DROP DATABASE IF EXISTS photoshare;
+CREATE DATABASE photoshare;
 USE photoshare;
-DROP TABLE IF EXISTS Pictures CASCADE;
-DROP TABLE IF EXISTS Users CASCADE;
 
 CREATE TABLE Users (
-    user_id int4  AUTO_INCREMENT,
-    email varchar(255) UNIQUE,
-    password varchar(255),
-  CONSTRAINT users_pk PRIMARY KEY (user_id)
+    user_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    firstName VARCHAR(255),
+    lastName VARCHAR(255),
+    hometown VARCHAR(255),
+    gender ENUM('M', 'F'),
+    dateOfBirth DATE
 );
 
-CREATE TABLE Pictures
-(
-  picture_id int4  AUTO_INCREMENT,
-  user_id int4,
-  imgdata longblob ,
-  caption VARCHAR(255),
-  INDEX upid_idx (user_id),
-  CONSTRAINT pictures_pk PRIMARY KEY (picture_id)
+CREATE TABLE Friends (
+ user_id INT NOT NULL,
+ friend_id INT NOT NULL,
+ PRIMARY KEY  (user_id, friend_id),
+ FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+ FOREIGN KEY (friend_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
-INSERT INTO Users (email, password) VALUES ('test@bu.edu', 'test');
-INSERT INTO Users (email, password) VALUES ('test1@bu.edu', 'test');
+
+CREATE TABLE Albums (
+  album_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  date_created DATE NOT NULL,
+  user_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+  UNIQUE KEY albumid (user_id, name)
+);
+
+
+CREATE TABLE Pictures (
+  imgdata VARCHAR(255),
+  user_id INT NOT NULL,
+  caption VARCHAR(255) NOT NULL,
+  picture_id INT AUTO_INCREMENT UNIQUE PRIMARY KEY,
+  album_id INT,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (album_id) REFERENCES Albums(album_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Tags (
+  tagname VARCHAR(255) UNIQUE PRIMARY KEY,
+  picture_id INT,
+  FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Comments (
+  comment_id INT NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
+  text VARCHAR(255),
+  user_id INT DEFAULT '0',
+  Date DATE NOT NULL,
+  picture_id INT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id),
+  FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Likes (
+  picture_id INT NOT NULL,
+  user_id INT  DEFAULT '0',
+  PRIMARY KEY (picture_id, user_id),
+  FOREIGN KEY (picture_id) REFERENCES Pictures(picture_id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
