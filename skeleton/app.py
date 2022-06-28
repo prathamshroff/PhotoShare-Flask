@@ -123,6 +123,11 @@ def register_user():
 	try:
 		email=request.form.get('email')
 		password=request.form.get('password')
+		firstname=request.form.get('firstname')
+		lastname=request.form.get('lastname')
+		hometown=request.form.get('hometown')
+        gender=request.form.get('gender')
+        birthdate = request.form.get('birthdate')
 	except:
 		print("couldn't find all tokens") #this prints to shell, end users will not see this (all print statements go to shell)
 		return flask.redirect(flask.url_for('register'))
