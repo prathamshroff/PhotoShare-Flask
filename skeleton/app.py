@@ -23,7 +23,7 @@ app.secret_key = 'super secret string'  # Change this!
 
 #These will need to be changed according to your creditionals
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'p301102s'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'Ela123456'
 app.config['MYSQL_DATABASE_DB'] = 'photoshare'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -123,6 +123,11 @@ def register_user():
 	try:
 		email=request.form.get('email')
 		password=request.form.get('password')
+		firstname=request.form.get('firstname')
+		lastname=request.form.get('lastname')
+		hometown=request.form.get('hometown')
+		gender=request.form.get('gender')
+		birthdate = request.form.get('birthdate')
 	except:
 		print("couldn't find all tokens") #this prints to shell, end users will not see this (all print statements go to shell)
 		return flask.redirect(flask.url_for('register'))
