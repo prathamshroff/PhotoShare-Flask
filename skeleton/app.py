@@ -182,9 +182,10 @@ def upload_file():
 	if request.method == 'POST':
 		uid = getUserIdFromEmail(flask_login.current_user.id)
 		imgfile = request.files['photo']
+		caption = request.form.get('caption')
 		photo_data =imgfile.read()
 		cursor = conn.cursor()
-		cursor.execute('''INSERT INTO Pictures (imgdata, user_id, caption, album_id) VALUES (%s, %s, %s )''', (photo_data, uid, caption))
+		cursor.execute('''INSERT INTO Pictures (imgdata, user_id, caption) VALUES (%s, %s, %s )''', (photo_data, uid, caption))
 		conn.commit()
 		return render_template('hello.html', name=flask_login.current_user.id, message='Photo uploaded!', photos=getUsersPhotos(uid), base64=base64)
 	#The method is GET so we return a  HTML form to upload the a photo.
